@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6fb;
+    margin:0;
+}
+
+.header{
+    background:#2f80ed;
+    color:white;
+    padding:20px;
+    text-align:center;
+    font-size:24px;
+}
+
+.container{
+    width:80%;
+    margin:40px auto;
+}
+
+.section-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    text-align:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    font-size:18px;
+    font-weight:bold;
+}
+
+.admin-btn{
+    display:inline-block;
+    margin-top:30px;
+    padding:10px 20px;
+    background:#2f80ed;
+    color:white;
+    text-decoration:none;
+    border-radius:6px;
+}
+
+.admin-btn:hover{
+    background:#1c5ed6;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+Admin Dashboard
+</div>
+
+<div class="container">
+
+<h3>Sections</h3>
+
+<div class="section-grid">
+
+{% for s in sections %}
+
+<div class="card">
+{{s.name}}
+</div>
+
+{% endfor %}
+
+</div>
+
+<a class="admin-btn" href="/admin">Create Section / Upload Notes</a>
+
+</div>
+
+</body>
+</html>

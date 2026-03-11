@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Dashboard</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background: #f4f6fb;
+    margin:0;
+    padding:0;
+}
+
+.header{
+    background:#4a6cf7;
+    color:white;
+    padding:20px;
+    text-align:center;
+    font-size:24px;
+}
+
+.container{
+    width:80%;
+    margin:40px auto;
+}
+
+.section-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:10px;
+    text-align:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card a{
+    text-decoration:none;
+    color:#333;
+    font-size:18px;
+    font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+Student Dashboard
+</div>
+
+<div class="container">
+
+<h3>Available Sections</h3>
+
+<div class="section-grid">
+
+{% for s in sections %}
+
+<div class="card">
+<a href="/notes/{{s.id}}">{{s.name}}</a>
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</body>
+</html>

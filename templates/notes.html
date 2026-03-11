@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Notes</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6fb;
+    margin:0;
+}
+
+.header{
+    background:#4a6cf7;
+    color:white;
+    padding:20px;
+    text-align:center;
+    font-size:24px;
+}
+
+.container{
+    width:80%;
+    margin:40px auto;
+}
+
+.notes-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    text-align:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.title{
+    font-size:18px;
+    margin-bottom:15px;
+    font-weight:bold;
+}
+
+.btn{
+    display:inline-block;
+    margin:5px;
+    padding:8px 14px;
+    text-decoration:none;
+    border-radius:6px;
+    color:white;
+    font-size:14px;
+}
+
+.view{
+    background:#f39c12;
+}
+
+.view:hover{
+    background:#d68910;
+}
+
+.download{
+    background:#4a6cf7;
+}
+
+.download:hover{
+    background:#354edb;
+}
+
+.analyze{
+    background:#27ae60;
+}
+
+.analyze:hover{
+    background:#1e8e4a;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+Notes
+</div>
+
+<div class="container">
+
+<div class="notes-grid">
+
+{% for n in notes %}
+
+<div class="card">
+
+<div class="title">{{n.title}}</div>
+
+<a class="btn view" href="{{n.file.url}}" target="_blank">View</a>
+
+<a class="btn download" href="{{n.file.url}}">Download</a>
+
+<a class="btn analyze" href="/analyze/{{n.id}}/">Analyze</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</body>
+
+</html>
