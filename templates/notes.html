@@ -1,117 +1,220 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Notes</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notes — NotesApp</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body{
-    font-family: Arial, sans-serif;
-    background:#f4f6fb;
-    margin:0;
-}
+  body {
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    background: #0f0f1a;
+    color: #e2e8f0;
+  }
 
-.header{
-    background:#4a6cf7;
-    color:white;
-    padding:20px;
-    text-align:center;
-    font-size:24px;
-}
+  body::before {
+    content: '';
+    position: fixed;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
+    top: -150px; right: -100px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float 9s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,30px)} }
 
-.container{
-    width:80%;
-    margin:40px auto;
-}
+  /* Navbar */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 68px;
+    background: rgba(15,15,26,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-left { display: flex; align-items: center; gap: 16px; }
+  .back-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.05);
+    color: #94a3b8;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px; font-weight: 500;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: all 0.2s;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.09); color: #e2e8f0; transform: translateX(-2px); }
+  .nav-title {
+    font-size: 18px; font-weight: 600;
+    background: linear-gradient(135deg, #818cf8, #a78bfa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .logout-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 18px;
+    background: rgba(239,68,68,0.1);
+    color: #f87171; text-decoration: none;
+    border-radius: 8px; font-size: 14px; font-weight: 500;
+    border: 1px solid rgba(239,68,68,0.2); transition: all 0.2s;
+  }
+  .logout-btn:hover { background: rgba(239,68,68,0.2); transform: translateY(-1px); }
 
-.notes-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-    gap:20px;
-}
+  /* Main */
+  main { max-width: 1100px; margin: 0 auto; padding: 50px 24px 80px; }
 
-.card{
-    background:white;
-    padding:20px;
-    border-radius:10px;
-    text-align:center;
-    box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
+  .page-hero { margin-bottom: 40px; }
+  .page-hero h1 {
+    font-size: 34px; font-weight: 700;
+    background: linear-gradient(135deg, #e2e8f0 0%, #a78bfa 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .page-hero p { color: #64748b; font-size: 15px; }
 
-.title{
-    font-size:18px;
-    margin-bottom:15px;
-    font-weight:bold;
-}
+  .note-count {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(99,102,241,0.12);
+    border: 1px solid rgba(99,102,241,0.25);
+    color: #818cf8; padding: 6px 16px; border-radius: 20px;
+    font-size: 13px; font-weight: 500; margin-bottom: 32px;
+  }
 
-.btn{
-    display:inline-block;
-    margin:5px;
-    padding:8px 14px;
-    text-decoration:none;
-    border-radius:6px;
-    color:white;
-    font-size:14px;
-}
+  /* Notes grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
 
-.view{
-    background:#f39c12;
-}
+  .note-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 24px;
+    display: flex; flex-direction: column; gap: 20px;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    position: relative; overflow: hidden;
+  }
+  .note-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .note-card:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.35); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
+  .note-card:hover::before { opacity: 1; }
 
-.view:hover{
-    background:#d68910;
-}
+  .note-header { display: flex; align-items: flex-start; gap: 14px; }
+  .note-pdf-icon {
+    width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+    background: linear-gradient(135deg, #ef4444, #f97316);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: white; letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(239,68,68,0.3);
+  }
+  .note-title { font-size: 16px; font-weight: 600; color: #e2e8f0; line-height: 1.4; padding-top: 2px; }
 
-.download{
-    background:#4a6cf7;
-}
+  .note-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-.download:hover{
-    background:#354edb;
-}
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border-radius: 8px;
+    font-size: 13px; font-weight: 500;
+    text-decoration: none; transition: all 0.2s;
+    border: 1px solid transparent; flex: 1;
+    justify-content: center; white-space: nowrap;
+  }
+  .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-.analyze{
-    background:#27ae60;
-}
+  .btn-view {
+    background: rgba(234,179,8,0.12);
+    color: #fbbf24;
+    border-color: rgba(234,179,8,0.2);
+  }
+  .btn-view:hover { background: rgba(234,179,8,0.22); transform: translateY(-1px); }
 
-.analyze:hover{
-    background:#1e8e4a;
-}
+  .btn-download {
+    background: rgba(99,102,241,0.12);
+    color: #818cf8;
+    border-color: rgba(99,102,241,0.2);
+  }
+  .btn-download:hover { background: rgba(99,102,241,0.22); transform: translateY(-1px); }
 
+  .btn-analyze {
+    background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(5,150,105,0.15));
+    color: #34d399;
+    border-color: rgba(16,185,129,0.25);
+    flex-basis: 100%;
+  }
+  .btn-analyze:hover { background: linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.25)); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(16,185,129,0.2); }
+
+  .empty-state {
+    grid-column: 1/-1; text-align: center; padding: 80px 20px; color: #475569;
+  }
+  .empty-state svg { width: 60px; height: 60px; margin-bottom: 16px; opacity: 0.3; }
 </style>
-
 </head>
-
 <body>
 
-<div class="header">
-Notes
-</div>
+<nav>
+  <div class="nav-left">
+    <a class="back-btn" href="{% url 'student_dashboard' %}">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back
+    </a>
+    <span class="nav-title">Notes</span>
+  </div>
+  <a class="logout-btn" href="{% url 'logout' %}">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    Logout
+  </a>
+</nav>
 
-<div class="container">
+<main>
+  <div class="page-hero">
+    <h1>Section Notes</h1>
+    <p>View, download, or use AI to analyze any note below.</p>
+  </div>
 
-<div class="notes-grid">
+  <div class="note-count">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    {{ notes|length }} note{{ notes|length|pluralize }}
+  </div>
 
-{% for n in notes %}
-
-<div class="card">
-
-<div class="title">{{n.title}}</div>
-
-<a class="btn view" href="{{n.file.url}}" target="_blank">View</a>
-
-<a class="btn download" href="{{n.file.url}}">Download</a>
-
-<a class="btn analyze" href="/analyze/{{n.id}}/">Analyze</a>
-
-</div>
-
-{% endfor %}
-
-</div>
-
-</div>
+  <div class="grid">
+    {% for n in notes %}
+    <div class="note-card">
+      <div class="note-header">
+        <div class="note-pdf-icon">PDF</div>
+        <div class="note-title">{{ n.title }}</div>
+      </div>
+      <div class="note-actions">
+        <a class="btn btn-view" href="{{ n.file.url }}" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          View
+        </a>
+        <a class="btn btn-download" href="{{ n.file.url }}" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </a>
+        <a class="btn btn-analyze" href="{% url 'analyze_pdf' n.id %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 8v4l3 3"/><path d="M18 2l4 4-4 4"/><path d="M22 2l-4 4"/></svg>
+          Analyze with AI
+        </a>
+      </div>
+    </div>
+    {% empty %}
+    <div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <p>No notes in this section yet.</p>
+    </div>
+    {% endfor %}
+  </div>
+</main>
 
 </body>
-
 </html>

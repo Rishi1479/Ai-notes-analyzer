@@ -61,6 +61,12 @@ button:hover{
 <form method="POST">
 {% csrf_token %}
 
+{% if error %}
+<div style="color: #e53e3e; background-color: #fff5f5; border: 1px solid #fed7d7; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; text-align: left;">
+  {{ error }}
+</div>
+{% endif %}
+
 <input type="text" name="username" placeholder="Username" required>
 
 <input type="password" name="password" placeholder="Password" required>
